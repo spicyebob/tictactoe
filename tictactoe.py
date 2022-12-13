@@ -41,10 +41,23 @@ def detect(moves):
     >>> print(a)
     {array (a)}, {array (ref)}
     """
+    def draw_circle(event,x,y,flags,param):
+        if event == cv.EVENT_LBUTTONDBLCLK:
+            cv.circle(current_board, (x,y), 45, (255,255,255), 5)
+
+    cv.namedWindow("image")
+    cv.setMouseCallback("image", draw_circle)
+
     current_board = cv.imread("tictactoe.png")    # reads both the user-played image and the reference image
     reference = cv.imread("tictactoe_ref.png")
     current_board = cv.cvtColor(current_board, cv.COLOR_BGR2GRAY)    # converts both images to B&W
     reference = cv.cvtColor(reference, cv.COLOR_BGR2GRAY)
+
+    while(1):
+        cv.imshow("image", current_board)
+        if cv.waitKey(20) & 0xFF == 27:
+            break
+    cv.destroyAllWindows()
 
     mask1 = reference != current_board    # creates a mask of where the reference board does not match the current board, to determine where a move has been played
     new_board = np.zeros((512,512), np.uint8)    # creates an empty board in order to store the new moves
